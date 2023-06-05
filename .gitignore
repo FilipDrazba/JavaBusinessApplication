@@ -1,0 +1,63 @@
+# Directories
+target/
+bin/
+build/
+dist/
+out/
+.idea/
+.vscode/
+*.iml
+
+# Files
+*.log
+*.jar
+*.war
+*.ear
+*.class
+*.exe
+*.dll
+*.so
+*.obj
+*.o
+*.a
+*.lib
+*.swp
+*.DS_Store
+
+# Configuration
+application*.properties
+
+# Docker
+Dockerfile*
+*.yaml
+
+# Databases
+*.db
+*.sqlite
+*.sql
+
+# PostgreSQL
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Project exclude paths
+/.mvn/wrapper/
+
+# NPM files
+node_modules/
+package-lock.json
+
+# debug files
+*.env*
+npm-debug.log*
+
+# IDE
+*.sublime-*
+*.swo
+
+# Systemy operacyjne
+.DS_Store
+Thumbs.db
+
+# Inne
+*.cache
