@@ -3,6 +3,7 @@ package pl.edu.pb.wi.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import pl.edu.pb.wi.dto.request.ProductDtoRequest;
 import pl.edu.pb.wi.dto.response.ProductDtoResponse;
 import pl.edu.pb.wi.entity.Product;
 
@@ -14,4 +15,8 @@ public interface ProductDtoMapper {
     @Mapping(target = "name", source = "name")
     @Mapping(target = "price", source = "price")
     ProductDtoResponse fromProductToProductDtoResponse(Product product);
+
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "price", source = "price")
+    Product fromProductDtoRequestToProduct(ProductDtoRequest productDtoRequest);
 }
