@@ -20,4 +20,8 @@ public class ProductService {
         productBeingUpdated.setUpdatableValuesFrom(product);
         return productRepository.save(productBeingUpdated);
     }
+
+    public void delete(Long id) {
+        productRepository.delete(findById(id));
+    }
 }
