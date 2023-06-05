@@ -29,4 +29,12 @@ public class ProductController {
         Product savedProduct = productRepository.save(unsavedProduct);
         return ResponseEntity.ok(ProductDtoMapper.INSTANCE.fromProductToProductDtoResponse(savedProduct));
     }
+
+    @PutMapping("product/{id}")
+    public ResponseEntity<ProductDtoResponse> updateReservation(@PathVariable Long id,
+                                                                @RequestBody ProductDtoRequest productDtoRequest) {
+        Product product = productService.update(id, ProductDtoMapper.INSTANCE.fromProductDtoRequestToProduct(productDtoRequest));
+        ProductDtoResponse response = ProductDtoMapper.INSTANCE.fromProductToProductDtoResponse(product);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -14,4 +14,10 @@ public class ProductService {
     public Product findById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product"));
     }
+
+    public Product update(Long id, Product product) {
+        Product productBeingUpdated = findById(id);
+        productBeingUpdated.setUpdatableValuesFrom(product);
+        return productRepository.save(productBeingUpdated);
+    }
 }

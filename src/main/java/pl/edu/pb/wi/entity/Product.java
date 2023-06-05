@@ -19,4 +19,13 @@ public class Product {
     private Long id;
     private String name;
     private BigDecimal price;
+
+    public void setUpdatableValuesFrom(Product other) {
+        if (other.getName() != null) {
+            this.name = other.name;
+        }
+        if (other.price != null) {
+            this.price = other.price;
+        }
+    }
 }
