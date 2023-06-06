@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 import pl.edu.pb.wi.service.JwtService;
 
 import java.security.Key;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Service
 public class JwtServiceImpl implements JwtService {
     // TODO Generate better secret key and move to application.properties
     private static final String SECRET = "145f82ea1648405a08a092041c1b4a4aeafa8b6b8c997b0b4230ed232f3be864e499bbdbf200873d1b231fe20b9fa8d694a376fe7044340226b7be9d5ab36b3c";
