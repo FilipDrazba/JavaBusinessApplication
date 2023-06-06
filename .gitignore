@@ -8,6 +8,9 @@ out/
 .vscode/
 *.iml
 
+# Database files
+data/
+
 # Files
 *.log
 *.jar
