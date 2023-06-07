@@ -13,12 +13,16 @@ import pl.edu.pb.wi.entity.User;
 import pl.edu.pb.wi.entity.constants.Role;
 import pl.edu.pb.wi.service.AuthService;
 import pl.edu.pb.wi.service.JwtService;
+import pl.edu.pb.wi.service.RoleService;
 import pl.edu.pb.wi.service.UserService;
+
+import java.util.Collections;
 
 @Service
 public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final RoleService roleService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
@@ -26,11 +30,13 @@ public class AuthServiceImpl implements AuthService {
     AuthServiceImpl(
             PasswordEncoder passwordEncoder,
             UserService userService,
+            RoleService roleService,
             JwtService jwtService,
             AuthenticationManager authenticationManager
     ) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
+        this.roleService = roleService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
@@ -42,7 +48,8 @@ public class AuthServiceImpl implements AuthService {
                 .email(registerRequest.getEmail())
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
-                .role(Role.USER)
+                .role(Collections.singletonList(
+                        roleService.getRoleByName(Role.RoleType.USER.getName())))
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
 
