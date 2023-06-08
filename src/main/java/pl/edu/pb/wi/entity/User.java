@@ -22,21 +22,21 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
-    private List<Role> role = new ArrayList<>();
+    protected List<Role> role = new ArrayList<>();
     @Column(unique = true)
-    private String username;
+    protected String username;
     @Column(unique = true)
-    private String email;
-    private String password;
-    private String firstName;
-    private String lastName;
+    protected String email;
+    protected String password;
+    protected String firstName;
+    protected String lastName;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
