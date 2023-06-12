@@ -28,7 +28,7 @@ data/
 *.DS_Store
 
 # Configuration
-#application*.properties
+application*.properties
 
 # Docker
 Dockerfile*
