@@ -8,6 +8,9 @@ out/
 .vscode/
 *.iml
 
+# Database files
+data/
+
 # Files
 *.log
 *.jar
@@ -25,7 +28,7 @@ out/
 *.DS_Store
 
 # Configuration
-application*.properties
+#application*.properties
 
 # Docker
 Dockerfile*
