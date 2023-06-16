@@ -2,20 +2,33 @@ package pl.edu.pb.wi.entity.constants;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "roles")
+@RequiredArgsConstructor
+@SuperBuilder
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
+    /*
+        -- Roles example --
+
+        User        - simple application user
+        Moderator   - can moderate application content (e.g. remove, block users / products)
+                    - can't publish products
+        Admin       - can do anything
+     */
     public enum RoleType {
         USER("USER"),
+        MODERATOR("MODERATOR"),
         ADMIN("ADMIN");
 
         String name;
