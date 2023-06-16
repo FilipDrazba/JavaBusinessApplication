@@ -1,13 +1,12 @@
 package pl.edu.pb.wi;
 
-import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.edu.pb.wi.entity.User;
-import pl.edu.pb.wi.entity.constants.Role;
+import pl.edu.pb.wi.entity.Role;
 import pl.edu.pb.wi.repository.RoleRepository;
 import pl.edu.pb.wi.repository.UserRepository;
 
@@ -19,7 +18,6 @@ public class JavaBusinessApplication implements CommandLineRunner {
     RoleRepository roleRepository;
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
-    EntityManager entityManager;
 
     public static void main(String[] args) {
         SpringApplication.run(JavaBusinessApplication.class, args);

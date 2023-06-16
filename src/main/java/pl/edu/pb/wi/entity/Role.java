@@ -1,4 +1,4 @@
-package pl.edu.pb.wi.entity.constants;
+package pl.edu.pb.wi.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
