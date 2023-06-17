@@ -33,7 +33,7 @@ public class Role {
         MODERATOR("MODERATOR"),
         ADMIN("ADMIN");
 
-        String name;
+        final String name;
 
         RoleType(String name) {
             this.name = name;
@@ -44,7 +44,7 @@ public class Role {
         }
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "roles_privileges",
             joinColumns = @JoinColumn(

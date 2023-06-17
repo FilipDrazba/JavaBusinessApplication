@@ -1,7 +1,5 @@
 package pl.edu.pb.wi.config;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -77,9 +75,7 @@ public class DatabaseConfig {
                 .username("admin")
                 .email("admin@store.com")
                 .password(passwordEncoder.encode("admin"))
-                .role(Collections.singletonList(
-                        roleRepository.getRoleByName(Role.RoleType.ADMIN.getName())
-                ))
+                .role(roleRepository.getRoleByName(Role.RoleType.ADMIN.getName()))
                 .build();
 
         userRepository.save(adminUser);
