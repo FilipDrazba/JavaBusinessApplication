@@ -1,31 +1,37 @@
 package pl.edu.pb.wi.controlleer;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pb.wi.controlleer.annotation.AccountType;
 import pl.edu.pb.wi.controlleer.annotation.ApiRequestMapping;
 import pl.edu.pb.wi.entity.Role;
 import pl.edu.pb.wi.entity.User;
+import pl.edu.pb.wi.service.UserService;
 
 @RestController
 @ApiRequestMapping
-@RequiredArgsConstructor
 public class AdminController {
+    private final UserService userService;
+
+    AdminController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/admin/user/{id}")
     @AccountType(accountType = Role.RoleType.ADMIN)
     User getUserById(@PathVariable Long id) {
-        return null;
+        return userService.getUserById(id);
     }
 
     @DeleteMapping("/admin/user/{id}")
     @AccountType(accountType = Role.RoleType.ADMIN)
     int deleteUserById(@PathVariable Long id) {
-        return 0;
+        return userService.deleteUserById(id);
     }
 
-    @PostMapping("/admin/super-user")
+    @PostMapping("/admin/moderator")
     @AccountType(accountType = Role.RoleType.ADMIN)
-    User createSuperUser(@RequestBody User user) {
+    User createModerator(@RequestBody User user) {
+        userService.createModerator(user);
         return user;
     }
 }

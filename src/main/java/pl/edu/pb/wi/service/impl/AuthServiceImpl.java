@@ -16,8 +16,6 @@ import pl.edu.pb.wi.service.JwtService;
 import pl.edu.pb.wi.service.RoleService;
 import pl.edu.pb.wi.service.UserService;
 
-import java.util.Collections;
-
 @Service
 public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
@@ -52,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
 
-        userService.create(user);
+        userService.createSimpleUser(user);
         String token = jwtService.generateToken(user);
         return AuthDtoResponse.builder()
                 .token(token)
