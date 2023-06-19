@@ -11,6 +11,8 @@ import pl.edu.pb.wi.mapper.ProductDtoMapper;
 import pl.edu.pb.wi.repository.ProductRepository;
 import pl.edu.pb.wi.service.ProductService;
 
+import java.util.List;
+
 @RestController
 @ApiRequestMapping
 @RequiredArgsConstructor
@@ -21,6 +23,11 @@ public class ProductController {
     @GetMapping("product/{id}")
     ResponseEntity<ProductDtoResponse> findProductById(@PathVariable Long id) {
         return ResponseEntity.ok(ProductDtoMapper.INSTANCE.fromProductToProductDtoResponse(productService.findById(id)));
+    }
+
+    @GetMapping("product")
+    List<Product> getAllProducts() {
+        return productService.getAll();
     }
 
     @PostMapping("product")

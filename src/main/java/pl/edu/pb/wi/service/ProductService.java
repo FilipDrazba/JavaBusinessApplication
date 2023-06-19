@@ -6,6 +6,8 @@ import pl.edu.pb.wi.entity.Product;
 import pl.edu.pb.wi.http.ResourceNotFoundException;
 import pl.edu.pb.wi.repository.ProductRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -13,6 +15,10 @@ public class ProductService {
 
     public Product findById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product"));
+    }
+
+    public List<Product> getAll() {
+        return productRepository.getAll();
     }
 
     public Product update(Long id, Product product) {
