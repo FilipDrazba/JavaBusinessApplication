@@ -10,13 +10,11 @@ import pl.edu.pb.wi.dto.request.AuthDtoRequest;
 import pl.edu.pb.wi.dto.request.RegisterDtoRequest;
 import pl.edu.pb.wi.dto.response.AuthDtoResponse;
 import pl.edu.pb.wi.entity.User;
-import pl.edu.pb.wi.entity.constants.Role;
+import pl.edu.pb.wi.entity.Role;
 import pl.edu.pb.wi.service.AuthService;
 import pl.edu.pb.wi.service.JwtService;
 import pl.edu.pb.wi.service.RoleService;
 import pl.edu.pb.wi.service.UserService;
-
-import java.util.Collections;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -48,12 +46,11 @@ public class AuthServiceImpl implements AuthService {
                 .email(registerRequest.getEmail())
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
-                .role(Collections.singletonList(
-                        roleService.getRoleByName(Role.RoleType.USER.getName())))
+                .role(roleService.getRoleByName(Role.RoleType.USER.getName()))
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
 
-        userService.create(user);
+        userService.createSimpleUser(user);
         String token = jwtService.generateToken(user);
         return AuthDtoResponse.builder()
                 .token(token)

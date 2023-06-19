@@ -1,17 +1,15 @@
 package pl.edu.pb.wi.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.edu.pb.wi.entity.constants.Role;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
@@ -23,13 +21,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private List<Role> role = new ArrayList<>();
+    @ManyToOne
+    private Role role;
     @Column(unique = true)
     private String username;
     @Column(unique = true)
@@ -39,8 +32,9 @@ public class User implements UserDetails {
     private String lastName;
 
     @Override
+    @Transactional
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return role.getPrivileges().stream().map(privilege -> new SimpleGrantedAuthority(privilege.getName())).collect(Collectors.toList());
     }
 
     @Override
