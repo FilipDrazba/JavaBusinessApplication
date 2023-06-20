@@ -11,6 +11,8 @@ import pl.edu.pb.wi.repository.BasketProductRepository;
 import pl.edu.pb.wi.repository.BasketRepository;
 import pl.edu.pb.wi.service.BasketService;
 
+import java.util.Collection;
+
 @Service
 public class BasketServiceImpl implements BasketService {
     private final BasketRepository basketRepository;
@@ -44,5 +46,38 @@ public class BasketServiceImpl implements BasketService {
         oldBasket.setProducts(basket.getProducts());
 
         return basketRepository.save(oldBasket);
+    }
+
+    @Override
+    public Basket addProduct(BasketProduct basketProduct) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Basket basket = basketRepository.getBasketByUserId(user.getId());
+
+        for(BasketProduct b : basket.getProducts()) {
+            if(b.getProduct().getId().equals(basketProduct.getProduct().getId())) {
+                b.setQuantity(b.getQuantity() + basketProduct.getQuantity());
+                basketProductRepository.save(b);
+                return basketRepository.save(basket);
+            }
+        }
+
+        Collection<BasketProduct> savedProducts = basket.getProducts();
+        savedProducts.add(basketProduct);
+
+        basket.setProducts(savedProducts);
+
+        return basketRepository.save(basket);
+    }
+
+    @Override
+    public Basket deleteProductFromBasket(Long id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Basket basket = basketRepository.getBasketByUserId(user.getId());
+        Collection<BasketProduct> products = basket.getProducts();
+        products.removeIf(product -> product.getId().equals(id));
+        basket.setProducts(products);
+        basketRepository.save(basket);
+
+        return basketRepository.getBasketByUserId(user.getId());
     }
 }

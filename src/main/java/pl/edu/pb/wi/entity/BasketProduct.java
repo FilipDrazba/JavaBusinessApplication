@@ -14,8 +14,9 @@ import lombok.experimental.SuperBuilder;
 public class BasketProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @OneToOne
-    Product product;
-    Integer quantity;
+    @JoinColumn(name = "product_id")
+    private Product product;
+    private Integer quantity;
 }

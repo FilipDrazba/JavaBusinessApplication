@@ -7,9 +7,6 @@ import pl.edu.pb.wi.entity.*;
 import pl.edu.pb.wi.repository.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -38,11 +35,6 @@ public class DatabaseConfig {
     }
 
     public void init() {
-        /*
-            Roles needed to access admin endpoints
-            Simple users will not have any assigned roles
-        */
-
         roleRepository.save(Role.builder().name("ADMIN").build());
         roleRepository.save(Role.builder().name("USER").build());
         roleRepository.save(Role.builder().name("MODERATOR").build());
@@ -78,7 +70,12 @@ public class DatabaseConfig {
 
         basketRepository.save(basket);
 
-        BasketProduct basketProduct = BasketProduct.builder().id(1L).product(product).quantity(3).build();
+        BasketProduct basketProduct = BasketProduct.builder()
+                .id(1L)
+                .product(product)
+                .quantity(3)
+                .build();
+
         basketProductRepository.save(basketProduct);
         basket.setProducts(List.of(basketProduct));
 

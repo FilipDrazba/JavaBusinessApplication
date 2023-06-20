@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pb.wi.controlleer.annotation.AccountType;
 import pl.edu.pb.wi.controlleer.annotation.ApiRequestMapping;
+import pl.edu.pb.wi.dto.response.BasketDtoResponse;
 import pl.edu.pb.wi.entity.Basket;
+import pl.edu.pb.wi.entity.BasketProduct;
 import pl.edu.pb.wi.entity.Role;
 import pl.edu.pb.wi.service.BasketService;
 
@@ -20,25 +22,33 @@ public class BasketController {
 
     @GetMapping("basket/{id}")
     @AccountType(accountType = Role.RoleType.USER)
-    Basket getBasketById(@PathVariable Long id) {
+    BasketDtoResponse getBasketById(@PathVariable Long id) {
         Basket basket = basketService.getBasketById(id);
-        basket.getUser().setPassword(null);
-        return basket;
+        return BasketDtoResponse.builder().products(basket.getProducts()).id(basket.getId()).build();
     }
 
     @GetMapping("basket/user/{id}")
     @AccountType(accountType = Role.RoleType.USER)
-    Basket getBasketByUserId(@PathVariable Long id) {
+    BasketDtoResponse getBasketByUserId(@PathVariable Long id) {
         Basket basket = basketService.getBasketByUserId(id);
-        basket.getUser().setPassword(null);
-        return basket;
+        return BasketDtoResponse.builder().products(basket.getProducts()).id(basket.getId()).build();
     }
 
     @PutMapping("basket")
     @AccountType(accountType = Role.RoleType.USER)
     Basket updateBasket(@RequestBody Basket basket) {
-        Basket updated = basketService.updateBasket(basket);
-        updated.getUser().setPassword(null);
-        return updated;
+        return basketService.updateBasket(basket);
+    }
+
+    @PostMapping("basket/product")
+    @AccountType(accountType = Role.RoleType.USER)
+    Basket addProductToBasket(@RequestBody BasketProduct basketProduct) {
+        return basketService.addProduct(basketProduct);
+    }
+
+    @DeleteMapping("basket/product/{id}")
+    @AccountType(accountType = Role.RoleType.USER)
+    Basket deleteProductFromBasket(@PathVariable Long id) {
+        return basketService.deleteProductFromBasket(id);
     }
 }

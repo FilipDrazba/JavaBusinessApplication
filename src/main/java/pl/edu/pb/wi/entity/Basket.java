@@ -16,11 +16,9 @@ import java.util.Collection;
 public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @OneToMany
-    Collection<BasketProduct> products;
-
+    private Long id;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Collection<BasketProduct> products;
     @OneToOne
-    User user;
+    private User user;
 }
