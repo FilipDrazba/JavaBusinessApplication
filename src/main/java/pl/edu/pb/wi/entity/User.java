@@ -1,5 +1,6 @@
 package pl.edu.pb.wi.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -9,8 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Entity
 @Data
@@ -30,11 +32,13 @@ public class User implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
-
     @Override
     @Transactional
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getPrivileges().stream().map(privilege -> new SimpleGrantedAuthority(privilege.getName())).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority(role.getName()));
+        return authorities;
     }
 
     @Override

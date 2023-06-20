@@ -17,7 +17,6 @@ public class DatabaseConfig {
     RoleRepository roleRepository;
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
-    PrivilegeRepository privilegeRepository;
     BasketRepository basketRepository;
     ProductRepository productRepository;
     BasketProductRepository basketProductRepository;
@@ -27,14 +26,12 @@ public class DatabaseConfig {
             RoleRepository roleRepository,
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            PrivilegeRepository privilegeRepository,
             BasketRepository basketRepository,
             ProductRepository productRepository,
             BasketProductRepository basketProductRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.privilegeRepository = privilegeRepository;
         this.basketRepository = basketRepository;
         this.productRepository = productRepository;
         this.basketProductRepository = basketProductRepository;
@@ -46,35 +43,9 @@ public class DatabaseConfig {
             Simple users will not have any assigned roles
         */
 
-        Collection<Privilege> adminPrivileges = new ArrayList<>();
-        adminPrivileges.add(privilegeRepository.save(new Privilege("ADD_PRODUCT")));
-        adminPrivileges.add(privilegeRepository.save(new Privilege("GET_PRODUCT")));
-        adminPrivileges.add(privilegeRepository.save(new Privilege("DELETE_PRODUCT")));
-        adminPrivileges.add(privilegeRepository.save(new Privilege("UPDATE_PRODUCT")));
-
-        adminPrivileges.add(privilegeRepository.save(new Privilege("DELETE_USER")));
-        adminPrivileges.add(privilegeRepository.save(new Privilege("BLOCK_USER")));
-
-        adminPrivileges.add(privilegeRepository.save(new Privilege("ADD_SUPER_USER")));
-        adminPrivileges.add(privilegeRepository.save(new Privilege("GET_SUPER_USER")));
-        adminPrivileges.add(privilegeRepository.save(new Privilege("UPDATE_SUPER_USER")));
-        adminPrivileges.add(privilegeRepository.save(new Privilege("DELETE_SUPER_USER")));
-
-        roleRepository.save(Role.builder().privileges(adminPrivileges).name("ADMIN").build());
-
-        Collection<Privilege> userPrivileges = new ArrayList<>();
-        userPrivileges.add(privilegeRepository.getPrivilegeByName("ADD_PRODUCT"));
-        userPrivileges.add(privilegeRepository.getPrivilegeByName("GET_PRODUCT"));
-        userPrivileges.add(privilegeRepository.getPrivilegeByName("DELETE_PRODUCT"));
-        userPrivileges.add(privilegeRepository.getPrivilegeByName("UPDATE_PRODUCT"));
-
-        roleRepository.save(Role.builder().name("USER").privileges(userPrivileges).build());
-
-        Collection<Privilege> moderatorPrivileges = new ArrayList<>();
-        moderatorPrivileges.add(privilegeRepository.save(new Privilege("DELETE_USER")));
-        moderatorPrivileges.add(privilegeRepository.save(new Privilege("BLOCK_USER")));
-
-        roleRepository.save(Role.builder().name("MODERATOR").privileges(moderatorPrivileges).build());
+        roleRepository.save(Role.builder().name("ADMIN").build());
+        roleRepository.save(Role.builder().name("USER").build());
+        roleRepository.save(Role.builder().name("MODERATOR").build());
 
         User adminUser = User.builder()
                 .firstName("Admin")

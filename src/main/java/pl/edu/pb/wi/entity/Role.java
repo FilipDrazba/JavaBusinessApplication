@@ -43,12 +43,4 @@ public class Role {
             return this.name;
         }
     }
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "privilege_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name =" privilege_id")
-    )
-    private Collection<Privilege> privileges;
 }
