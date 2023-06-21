@@ -9,12 +9,10 @@ import org.springframework.stereotype.Service;
 import pl.edu.pb.wi.dto.request.AuthDtoRequest;
 import pl.edu.pb.wi.dto.request.RegisterDtoRequest;
 import pl.edu.pb.wi.dto.response.AuthDtoResponse;
+import pl.edu.pb.wi.entity.Basket;
 import pl.edu.pb.wi.entity.User;
 import pl.edu.pb.wi.entity.Role;
-import pl.edu.pb.wi.service.AuthService;
-import pl.edu.pb.wi.service.JwtService;
-import pl.edu.pb.wi.service.RoleService;
-import pl.edu.pb.wi.service.UserService;
+import pl.edu.pb.wi.service.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -23,6 +21,7 @@ public class AuthServiceImpl implements AuthService {
     private final RoleService roleService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final BasketService basketService;
 
     @Autowired
     AuthServiceImpl(
@@ -30,13 +29,15 @@ public class AuthServiceImpl implements AuthService {
             UserService userService,
             RoleService roleService,
             JwtService jwtService,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            BasketService basketService
     ) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.roleService = roleService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.basketService = basketService;
     }
 
     @Override
@@ -50,7 +51,11 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
 
+        Basket basket = Basket.builder().user(user).build();
+
         userService.createSimpleUser(user);
+        basketService.create(basket);
+
         String token = jwtService.generateToken(user);
         return AuthDtoResponse.builder()
                 .token(token)

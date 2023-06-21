@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.edu.pb.wi.dto.request.BasketDtoRequest;
 import pl.edu.pb.wi.entity.Basket;
 import pl.edu.pb.wi.entity.BasketProduct;
 import pl.edu.pb.wi.entity.User;
@@ -11,7 +12,7 @@ import pl.edu.pb.wi.repository.BasketProductRepository;
 import pl.edu.pb.wi.repository.BasketRepository;
 import pl.edu.pb.wi.service.BasketService;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class BasketServiceImpl implements BasketService {
@@ -39,11 +40,11 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     @Transactional
-    public Basket updateBasket(Basket basket) {
+    public Basket updateBasket(BasketDtoRequest basket) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Basket oldBasket = basketRepository.getBasketByUserId(user.getId());
+
         basketProductRepository.saveAll(basket.getProducts());
-        oldBasket.setProducts(basket.getProducts());
 
         return basketRepository.save(oldBasket);
     }
@@ -52,32 +53,35 @@ public class BasketServiceImpl implements BasketService {
     public Basket addProduct(BasketProduct basketProduct) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Basket basket = basketRepository.getBasketByUserId(user.getId());
+        List<BasketProduct> basketProducts = basketProductRepository.getAllByBasketId(basket.getId());
 
-        for(BasketProduct b : basket.getProducts()) {
+        for(BasketProduct b : basketProducts) {
             if(b.getProduct().getId().equals(basketProduct.getProduct().getId())) {
                 b.setQuantity(b.getQuantity() + basketProduct.getQuantity());
+                b.setBasket(basket);
                 basketProductRepository.save(b);
-                return basketRepository.save(basket);
+                return basket;
             }
         }
 
-        Collection<BasketProduct> savedProducts = basket.getProducts();
-        savedProducts.add(basketProduct);
+        basketProduct.setBasket(basket);
+        basketProductRepository.save(basketProduct);
 
-        basket.setProducts(savedProducts);
-
-        return basketRepository.save(basket);
+        return basket;
     }
 
     @Override
     public Basket deleteProductFromBasket(Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Basket basket = basketRepository.getBasketByUserId(user.getId());
-        Collection<BasketProduct> products = basket.getProducts();
-        products.removeIf(product -> product.getId().equals(id));
-        basket.setProducts(products);
-        basketRepository.save(basket);
+        BasketProduct basketProduct = basketProductRepository.getByProductIdAndBasketId(basket.getId(), id);
+        basketProductRepository.delete(basketProduct);
 
-        return basketRepository.getBasketByUserId(user.getId());
+        return basket;
+    }
+
+    @Override
+    public Basket create(Basket basket) {
+        return basketRepository.save(basket);
     }
 }

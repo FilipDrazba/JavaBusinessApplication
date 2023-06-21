@@ -15,8 +15,9 @@ public class BasketProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne
     private Product product;
     private Integer quantity;
+    @ManyToOne
+    private Basket basket;
 }

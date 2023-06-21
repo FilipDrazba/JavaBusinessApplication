@@ -7,7 +7,6 @@ import pl.edu.pb.wi.entity.*;
 import pl.edu.pb.wi.repository.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Component
 public class DatabaseConfig {
@@ -63,7 +62,7 @@ public class DatabaseConfig {
 
         productRepository.save(product);
 
-        Basket basket = Basket.builder().user(simpleUser).products(List.of()).build();
+        Basket basket = Basket.builder().user(simpleUser).build();
 
         userRepository.save(adminUser);
         userRepository.save(simpleUser);
@@ -74,11 +73,10 @@ public class DatabaseConfig {
                 .id(1L)
                 .product(product)
                 .quantity(3)
+                .basket(basket)
                 .build();
 
         basketProductRepository.save(basketProduct);
-        basket.setProducts(List.of(basketProduct));
-
         basketRepository.save(basket);
     }
 }
