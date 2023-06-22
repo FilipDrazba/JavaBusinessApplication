@@ -33,7 +33,7 @@ public class BasketController {
         logger.info("Retrieving basket by ID: {}", id);
         Basket basket = basketService.getBasketById(id);
         logger.info("Basket retrieved successfully: {}", basket);
-        return BasketDtoResponse.builder().products(basketProductService.getProductsByBasketId(id)).id(basket.getId()).build();
+        return BasketDtoResponse.builder().products(basketProductService.getProductsByBasketId(basket.getId())).id(basket.getId()).build();
     }
 
     @GetMapping("basket/user/{id}")
@@ -42,7 +42,7 @@ public class BasketController {
         logger.info("Retrieving basket by user ID: {}", id);
         Basket basket = basketService.getBasketByUserId(id);
         logger.info("Basket retrieved successfully: {}", basket);
-        return BasketDtoResponse.builder().products(basketProductService.getProductsByBasketId(id)).id(basket.getId()).build();
+        return BasketDtoResponse.builder().products(basketProductService.getProductsByBasketId(basket.getId())).id(basket.getId()).build();
     }
 
     @PutMapping("basket")
