@@ -41,6 +41,12 @@ public class AdminController {
         return user;
     }
 
+    @GetMapping("/admin/users")
+    @AccountType(accountType = Role.RoleType.ADMIN)
+    List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
     @GetMapping("/admin/moderators")
     @AccountType(accountType = Role.RoleType.ADMIN)
     ResponseEntity<List<UserDtoResponse>> getAllModerators() {

@@ -22,5 +22,6 @@ public class BasketProduct {
     private Product product;
     private Integer quantity;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Basket basket;
 }

@@ -19,4 +19,6 @@ public interface UserService extends UserDetailsService {
     List<User> getAllModerators();
 
     User update(Long id, User user);
+
+    List<User> getAllUsers();
 }
