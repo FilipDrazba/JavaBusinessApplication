@@ -23,6 +23,12 @@ public class Order {
     @Transient
     private BigDecimal amount;
 
+    public Order(Long id, List<Product> products, User owner) {
+        this.id = id;
+        this.products = products;
+        this.owner = owner;
+    }
+
     public BigDecimal getAmount() {
         return products.stream()
                 .map(Product::getPrice)

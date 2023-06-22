@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pb.wi.dto.request.BasketDtoRequest;
 import pl.edu.pb.wi.entity.Basket;
 import pl.edu.pb.wi.entity.BasketProduct;
+import pl.edu.pb.wi.entity.Product;
 import pl.edu.pb.wi.entity.User;
 import pl.edu.pb.wi.repository.BasketProductRepository;
 import pl.edu.pb.wi.repository.BasketRepository;
@@ -92,5 +93,10 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public Basket create(Basket basket) {
         return basketRepository.save(basket);
+    }
+
+    @Override
+    public List<Product> getBasketContentByUserId(Long userId){
+        return basketRepository.findBasketContentByUserId(userId);
     }
 }
