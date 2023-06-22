@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pb.wi.controlleer.annotation.AccountType;
 import pl.edu.pb.wi.controlleer.annotation.ApiRequestMapping;
+import pl.edu.pb.wi.dto.request.UserDtoRequest;
 import pl.edu.pb.wi.dto.response.UserDtoResponse;
 import pl.edu.pb.wi.entity.Role;
 import pl.edu.pb.wi.entity.User;
@@ -42,9 +43,16 @@ public class AdminController {
 
     @GetMapping("/admin/moderators")
     @AccountType(accountType = Role.RoleType.ADMIN)
-    ResponseEntity<List<UserDtoResponse>> getAllModerators(){
+    ResponseEntity<List<UserDtoResponse>> getAllModerators() {
         return ResponseEntity.ok(userService.getAllModerators().stream()
                 .map(UserDtoMapper.INSTANCE::fromUserToUserDtoResponse)
                 .toList());
+    }
+
+    @PostMapping("/admin/user")
+    @AccountType(accountType = Role.RoleType.ADMIN)
+    ResponseEntity<UserDtoResponse> createUser(@RequestBody UserDtoRequest userDtoRequest) {
+        User savedUser = userService.createSimpleUser(UserDtoMapper.INSTANCE.fromUserDtoRequestToUser(userDtoRequest));
+        return ResponseEntity.ok(UserDtoMapper.INSTANCE.fromUserToUserDtoResponse(savedUser));
     }
 }
