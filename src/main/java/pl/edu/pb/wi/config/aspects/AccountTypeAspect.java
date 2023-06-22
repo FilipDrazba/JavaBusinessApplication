@@ -11,6 +11,8 @@ import pl.edu.pb.wi.entity.Role;
 import pl.edu.pb.wi.entity.User;
 import pl.edu.pb.wi.exceptions.UnauthorizedAccessException;
 
+import java.util.List;
+
 @Aspect
 @Component
 public class AccountTypeAspect {
@@ -19,13 +21,16 @@ public class AccountTypeAspect {
     public void validateAccountTypeAccess(JoinPoint joinPoint) throws UnauthorizedAccessException {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         AccountType accountTypeAnnotation = methodSignature.getMethod().getAnnotation(AccountType.class);
-        Role.RoleType requiredRole = accountTypeAnnotation.accountType();
+        List<Role.RoleType> requiredRoles = List.of(accountTypeAnnotation.accountType());
 
         User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Role userRole = authenticatedUser.getRole();
 
-        if(!userRole.getName().equals(requiredRole.getName())) {
-            throw new UnauthorizedAccessException("Current user is not allowed to access this resource");
+        for(Role.RoleType roleType : requiredRoles) {
+            if(roleType.getName().equals(userRole.getName()))
+                return;
         }
+
+        throw new UnauthorizedAccessException("Current user is not allowed to access this resource");
     }
 }
