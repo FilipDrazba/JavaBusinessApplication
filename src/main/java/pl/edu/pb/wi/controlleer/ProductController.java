@@ -21,24 +21,24 @@ public class ProductController {
     private final ProductRepository productRepository;
 
     @GetMapping("product/{id}")
-    ResponseEntity<ProductDtoResponse> findProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDtoResponse> findProductById(@PathVariable Long id) {
         return ResponseEntity.ok(ProductDtoMapper.INSTANCE.fromProductToProductDtoResponse(productService.findById(id)));
     }
 
     @GetMapping("product")
-    List<Product> getAllProducts() {
+    public List<Product> getAllProducts() {
         return productService.getAll();
     }
 
     @PostMapping("product")
-    ResponseEntity<ProductDtoResponse> createProduct(@RequestBody ProductDtoRequest productDtoRequest) {
+    public ResponseEntity<ProductDtoResponse> createProduct(@RequestBody ProductDtoRequest productDtoRequest) {
         Product unsavedProduct = ProductDtoMapper.INSTANCE.fromProductDtoRequestToProduct(productDtoRequest);
         Product savedProduct = productRepository.save(unsavedProduct);
         return ResponseEntity.ok(ProductDtoMapper.INSTANCE.fromProductToProductDtoResponse(savedProduct));
     }
 
     @PutMapping("product/{id}")
-    public ResponseEntity<ProductDtoResponse> updateReservation(@PathVariable Long id,
+    public ResponseEntity<ProductDtoResponse> updateProduct(@PathVariable Long id,
                                                                 @RequestBody ProductDtoRequest productDtoRequest) {
         Product product = productService.update(id, ProductDtoMapper.INSTANCE.fromProductDtoRequestToProduct(productDtoRequest));
         ProductDtoResponse response = ProductDtoMapper.INSTANCE.fromProductToProductDtoResponse(product);

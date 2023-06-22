@@ -10,6 +10,8 @@ import pl.edu.pb.wi.repository.RoleRepository;
 import pl.edu.pb.wi.repository.UserRepository;
 import pl.edu.pb.wi.service.UserService;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -57,5 +59,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserById(id).orElseThrow(() -> new RegularException("User not found"));
         userRepository.delete(user);
         return 1;
+    }
+
+    @Override
+    public List<User> getAllModerators(){
+        return userRepository.findUsersByRoleModerator();
     }
 }
