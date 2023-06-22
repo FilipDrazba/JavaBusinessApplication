@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pl.edu.pb.wi.service.JwtService;
@@ -18,6 +20,7 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
     // TODO Generate better secret key and move to application.properties
+    private static final Logger logger = LogManager.getLogger(JwtServiceImpl.class);
     private static final String SECRET = "145f82ea1648405a08a092041c1b4a4aeafa8b6b8c997b0b4230ed232f3be864e499bbdbf200873d1b231fe20b9fa8d694a376fe7044340226b7be9d5ab36b3c";
 
     @Override
@@ -49,6 +52,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+        logger.info("Generating token for user: {}", userDetails.getUsername());
         return Jwts
                 .builder()
                 .setClaims(claims)
@@ -68,12 +72,29 @@ public class JwtServiceImpl implements JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsernameFromToken(token);
 
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        boolean isUsernameValid = username.equals(userDetails.getUsername());
+        boolean isTokenExpired = isTokenExpired(token);
+
+        if (!isUsernameValid) {
+            logger.warn("Invalid token for user: {}. Username mismatch.", userDetails.getUsername());
+        }
+
+        if (isTokenExpired) {
+            logger.warn("Expired token for user: {}", userDetails.getUsername());
+        }
+
+        return isUsernameValid && !isTokenExpired;
     }
 
     @Override
     public boolean isTokenExpired(String token) {
-        return extractExpirationDate(token).before(new Date());
+        Date expirationDate = extractExpirationDate(token);
+        boolean isExpired = expirationDate.before(new Date());
+
+        if (isExpired) {
+            logger.warn("Token expired. Expiration date: {}", expirationDate);
+        }
+        return isExpired;
     }
 
     @Override

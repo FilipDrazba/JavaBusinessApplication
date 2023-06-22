@@ -1,6 +1,8 @@
 package pl.edu.pb.wi.service.impl;
 
 import jakarta.transaction.Transactional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -11,13 +13,14 @@ import pl.edu.pb.wi.entity.User;
 import pl.edu.pb.wi.repository.BasketProductRepository;
 import pl.edu.pb.wi.repository.BasketRepository;
 import pl.edu.pb.wi.service.BasketService;
-
 import java.util.List;
 
 @Service
 public class BasketServiceImpl implements BasketService {
+    private static final Logger logger = LogManager.getLogger(BasketServiceImpl.class);
     private final BasketRepository basketRepository;
     private final BasketProductRepository basketProductRepository;
+
 
     @Autowired
     BasketServiceImpl(
@@ -30,11 +33,13 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public Basket getBasketById(Long id) {
+        logger.info("Getting basket by ID: {}", id);
         return basketRepository.getBasketById(id);
     }
 
     @Override
     public Basket getBasketByUserId(Long id) {
+        logger.info("Getting basket by user ID: {}", id);
         return basketRepository.getBasketByUserId(id);
     }
 
@@ -42,6 +47,8 @@ public class BasketServiceImpl implements BasketService {
     @Transactional
     public Basket updateBasket(BasketDtoRequest basket) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.info("Updating basket for user: {}", user.getId());
+
         Basket oldBasket = basketRepository.getBasketByUserId(user.getId());
 
         basketProductRepository.saveAll(basket.getProducts());
@@ -52,6 +59,7 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public Basket addProduct(BasketProduct basketProduct) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.info("Adding product to basket for user: {}", user.getId());
         Basket basket = basketRepository.getBasketByUserId(user.getId());
         List<BasketProduct> basketProducts = basketProductRepository.getAllByBasketId(basket.getId());
 
@@ -73,6 +81,7 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public Basket deleteProductFromBasket(Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.info("Deleting product from basket for user: {}", user.getId());
         Basket basket = basketRepository.getBasketByUserId(user.getId());
         BasketProduct basketProduct = basketProductRepository.getByProductIdAndBasketId(basket.getId(), id);
         basketProductRepository.delete(basketProduct);

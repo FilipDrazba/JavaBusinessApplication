@@ -1,5 +1,7 @@
 package pl.edu.pb.wi.service.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +18,7 @@ import pl.edu.pb.wi.service.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+    private static final Logger logger = LogManager.getLogger(AuthServiceImpl.class);
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final RoleService roleService;
@@ -42,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthDtoResponse register(RegisterDtoRequest registerRequest) {
+        logger.info("Registering a new user: {}", registerRequest.getUsername());
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
@@ -57,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
         basketService.create(basket);
 
         String token = jwtService.generateToken(user);
+        logger.info("User registered successfully: {}", registerRequest.getUsername());
         return AuthDtoResponse.builder()
                 .token(token)
                 .build();
@@ -64,6 +69,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthDtoResponse authenticate(AuthDtoRequest authenticationRequest) {
+        logger.info("Authenticating user: {}", authenticationRequest.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getUsername(),
@@ -73,6 +79,7 @@ public class AuthServiceImpl implements AuthService {
         if(user == null) throw new UsernameNotFoundException("User with provided username not found");
 
         String token = jwtService.generateToken(user);
+        logger.info("User authenticated successfully: {}", authenticationRequest.getUsername());
         return AuthDtoResponse.builder()
                 .token(token)
                 .build();
