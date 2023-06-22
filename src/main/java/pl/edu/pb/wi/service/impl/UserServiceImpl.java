@@ -62,7 +62,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllModerators(){
+    public List<User> getAllModerators() {
         return userRepository.findUsersByRoleModerator();
+    }
+
+    @Override
+    public User update(Long id, User otherUser) {
+        User thisUser = getUserById(id);
+        thisUser.update(otherUser);
+        return userRepository.save(thisUser);
     }
 }

@@ -55,4 +55,12 @@ public class AdminController {
         User savedUser = userService.createSimpleUser(UserDtoMapper.INSTANCE.fromUserDtoRequestToUser(userDtoRequest));
         return ResponseEntity.ok(UserDtoMapper.INSTANCE.fromUserToUserDtoResponse(savedUser));
     }
+
+    @PutMapping("admin/user/{id}")
+    @AccountType(accountType = Role.RoleType.ADMIN)
+    ResponseEntity<UserDtoResponse> updateUser(@PathVariable Long id,
+                                               @RequestBody UserDtoRequest userDtoRequest) {
+        User savedUser = userService.update(id, UserDtoMapper.INSTANCE.fromUserDtoRequestToUser(userDtoRequest));
+        return ResponseEntity.ok(UserDtoMapper.INSTANCE.fromUserToUserDtoResponse(savedUser));
+    }
 }

@@ -62,4 +62,11 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void update(User other){
+        this.username=other.username;
+        this.email=other.email;
+        this.firstName=other.firstName;
+        this.lastName=other.lastName;
+    }
 }
