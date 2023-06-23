@@ -13,6 +13,7 @@ import pl.edu.pb.wi.entity.Product;
 import pl.edu.pb.wi.entity.User;
 import pl.edu.pb.wi.mapper.OrderDtoMapper;
 import pl.edu.pb.wi.service.BasketService;
+import pl.edu.pb.wi.service.EmailService;
 import pl.edu.pb.wi.service.OrderService;
 import pl.edu.pb.wi.service.UserService;
 
@@ -25,6 +26,7 @@ public class OrderController {
     private final OrderService orderService;
     private final BasketService basketService;
     private final UserService userService;
+    private final EmailService emailService;
 
     @GetMapping("/order/{id}")
     public ResponseEntity<OrderDtoResponse> findById(@PathVariable Long id) {
@@ -36,6 +38,7 @@ public class OrderController {
     public ResponseEntity<OrderDtoResponse> createNewOrder(@PathVariable Long userId) {
         List<Product> productsList = basketService.getBasketContentByUserId(userId);
         User user = userService.getUserById(userId);
+        emailService.sendOrderConfirmation(user.getEmail());
         return ResponseEntity.ok(OrderDtoMapper.INSTANCE.fromOrderToOrderDtoResponse(
                 orderService.createOrder(productsList, user)));
     }
